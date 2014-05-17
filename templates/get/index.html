@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get id to MAGNETS</title>
+    <script src="http://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <style type="text/css" media="screen">
+    * {
+        margin: 0;
+        padding: 0;
+        outline: none;
+        font-size: 18px;
+        font-family: Lucida;
+    }
+    body {
+        background-color: whitesmoke;
+    }
+    a, a:hover, a:active {
+        /*color: red;*/
+        text-decoration: none;
+    }
+    ul, ol {
+        list-style: none;
+    }
+
+    /*
+    navigation
+    */
+    nav {
+        width: 1200px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-top: none;
+        color: #222;
+    }
+    nav ul {
+        display: table;
+        margin: 0 auto;
+    }
+    nav li {
+        display: table-cell;
+    }
+    nav a {
+        width: 150px;
+        padding: 5px 20px;
+        display: inline-block;
+        color: inherit;
+    }
+    nav a:hover {
+        background-color: #ccc;
+        color: inherit;
+    }
+
+
+    /*
+    main block
+    */
+    #wrapper {
+        width: 1200px;
+        margin: 30px auto;
+        display: table;
+    }   
+    #map {
+        width: 640px;
+        height: 480px;
+    }
+    aside {
+        width: 600px;
+        display: table-cell;
+        vertical-align: top;
+        padding: 10px;
+        /*border: 1px solid #CCC;*/
+
+    }
+    ul#top li a {
+        color: inherit;
+        padding: 7px 7px 7px 14px;
+        display: inline-block;
+        /*border-bottom: 1px dotted;*/
+    }
+    ul#top li a:hover, ul#top li a:active {
+        color: #720000;
+    }
+    ul#top li {
+        /*padding-right: 14px;*/
+        /*padding: 7px 14px;*/
+    }
+    ul#top li:nth-child(odd) {
+        background-color: #ddd;
+        color: #222;
+    }
+    ul#top li:nth-child(even) {
+        background-color: #222;
+        color: #ddd;
+    }
+    ul#top li span {
+        float: right;
+        padding: 7px 14px 7px 7px;
+    }
+    </style>
+    <script type="text/javascript">
+    var myMap;
+ 
+    ymaps.ready(init);
+ 
+    function init () {
+        myMap = new ymaps.Map('map', {
+            center: [55.76, 37.64],
+            zoom: 10
+        });
+ 
+    }
+    </script>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Search</a></li>
+            <li><a href="#">Top</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">About</a></li>
+        </ul>
+    </nav>
+<div id="wrapper">
+    <aside id="left_side">
+<div class="block">
+{% if get_id %}
+    <h1>Top torrents</h1>
+    <ul id="top">
+        {% for id in get_id %}
+        <li>
+            <span>rat</span>
+            <a href="magnet:?xt=urn:btih:{{ id.id }}">{{ id.name }}</a>
+        </li>    
+        {% endfor %}   
+    </ul>
+{% else %}
+    <h1>No top</h1>
+{% endif %}
+</div>
+</aside>
+<aside id="right_side">
+    <div id="map"></div>
+</aside>
+</div>
+</body>
+</html>
