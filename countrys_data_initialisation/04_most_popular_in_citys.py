@@ -11,8 +11,8 @@ gic = pygeoip.GeoIP('../data/GeoIPCity.dat')
 
 file_read = open('03_ids_towns', 'r')
 
-class Countrys:
-    countrys = {}
+class Countries:
+    countries = {}
     ids_most_popular = {}
     ids_names = {}
     def __init__(self):
@@ -26,17 +26,17 @@ class Countrys:
                 break;
         self.getNames()
     def addItem( self, country, id ):
-        if country in self.countrys:
-            if id in self.countrys[country]:
-                self.countrys[country][id] = self.countrys[country][id] + 1
+        if country in self.countries:
+            if id in self.countries[country]:
+                self.countries[country][id] = self.countries[country][id] + 1
             else:
-                self.countrys[country][id] = 1;
+                self.countries[country][id] = 1;
         else:
-            self.countrys[country] = {}
+            self.countries[country] = {}
             self.addItem( country = country, id = id )
     def backup(self):
         
-        for country in self.countrys:
+        for country in self.countries:
             i = 0
             
             for it in self.ids_most_popular:
@@ -50,14 +50,14 @@ class Countrys:
                 i = i + 1
                 if i > 50:
                     break
-            mass = self.countrys[country]
+            mass = self.countries[country]
             for id in mass:
                 mass[id] = math.sqrt( float(mass[id]) ) * self.ids_most_popular[id]
             mass = sorted(mass.iteritems(), key=operator.itemgetter(1),  reverse=True )
 
 
             basepath = os.path.dirname(__file__)
-            filepath = os.path.abspath(os.path.join(basepath, "..", "/data" , "/countrys", country))
+            filepath = os.path.abspath(os.path.join(basepath, "../countries", country))
             file_write = open(filepath, 'w')
             i = 0
             temp_list = []
@@ -91,14 +91,14 @@ class Countrys:
             except:
                 self.ids_names[it] = ("name","10")
             
-countrys = Countrys()
+countries = Countries()
 for line in file_read:
     i = int( line.split()[0] )
     if ( i < 0):
         continue
     id = line.split()[1]
     country = line.split()[3]
-    countrys.addItem( country = country , id = id )
+    countries.addItem( country = country , id = id )
 file_read.close()
-countrys.backup()
+countries.backup()
 
