@@ -19,7 +19,7 @@ class Countries:
         i = 0
         data = json.load(file_read)
         for line in data:
-            self.ids_most_popular[line[1]] = line[2]
+            self.ids_most_popular[line[1]] = float(line[2])
         self.getNames()
     def addItem( self, country, id ):
         if country in self.countries:
