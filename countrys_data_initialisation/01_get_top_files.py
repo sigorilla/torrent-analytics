@@ -11,7 +11,7 @@ connection2.metadata.authenticate('mipt', 'mipt')
 db2 = connection2.metadata
 
 
-item = db.torrents.find({ 'heard_times' : {"$gte" : 1}, u'metadata_exists' : True}).sort(u'heard_times' , -1).limit(10000)
+item = db.torrents.find({ 'heard_times' : {"$gte" : 1}, u'metadata_exists' : True}).sort(u'heard_times' , -1).limit(300)
 i = 0
 mass = []
 file = open("01_thousand_most_popular","w")
@@ -19,7 +19,7 @@ for it in item:
     try:
         meta = db2.bcoded_metadata.find_one({"_id" : it["_id"]})
         meta = bcode.bdecode(meta['bcoded_metadata'])
-        name = unicode(meta['name'], errors='ignore')
+        name = meta['name'].decode("ISO-8859-1")
         length = meta['piece length']
         temp = [str(i), str(it['_id']),str(it['heard_times']), name, length]
         mass.append(temp)
@@ -27,7 +27,7 @@ for it in item:
         print "error"
     i = i + 1
     print i
-data = json.dumps(mass)
+data = json.dumps(mass, "ISO-8859-1")
 file.write(data)
 file.close()
 print("Dumped to file -> 01_thousand_most_popular")
