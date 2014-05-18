@@ -11,7 +11,7 @@ connection2.metadata.authenticate('mipt', 'mipt')
 db2 = connection2.metadata
 
 
-item = db.torrents.find({ 'heard_times' : {"$gte" : 1}, u'metadata_exists' : True}).sort(u'heard_times' , -1).limit(300)
+item = db.torrents.find({ 'heard_times' : {"$gte" : 1}, u'metadata_exists' : True}).sort(u'heard_times' , -1).limit(10000)
 i = 0
 mass = []
 file = open("01_thousand_most_popular","w")

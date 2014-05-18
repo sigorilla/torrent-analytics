@@ -31,10 +31,8 @@ class Countries:
             self.countries[country] = {}
             self.addItem( country = country, id = id )
     def backup(self):
-        
         for country in self.countries:
             i = 0
-            
             for it in self.ids_most_popular:
                 self.addItem( country , it)
                 i = i + 1
@@ -51,7 +49,7 @@ class Countries:
                 mass[id] = mass[id] * self.ids_most_popular[id]
             mass = sorted(mass.iteritems(), key=operator.itemgetter(1),  reverse=True )
 
-
+            
             basepath = os.path.dirname(__file__)
             try:
                 filepath = os.path.abspath(os.path.join(basepath, "../countries", country))
