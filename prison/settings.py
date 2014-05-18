@@ -53,6 +53,9 @@ ROOT_URLCONF = 'prison.urls'
 
 WSGI_APPLICATION = 'prison.wsgi.application'
 
+ROOT_MEDIA_FILTERS = {
+    'js': 'mediagenerator.filters.template.Template',
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
@@ -80,5 +83,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
-
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+    '/var/www/static/',
+)
 STATIC_URL = '/static/'
