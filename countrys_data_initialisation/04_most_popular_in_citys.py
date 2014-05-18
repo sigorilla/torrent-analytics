@@ -1,15 +1,14 @@
 from pymongo import Connection
 import bcode
-import pygeoip
 import math
 import operator
 import os.path
 import sys
 import json
-
+import pygeoip
 gic = pygeoip.GeoIP('../data/GeoIPCity.dat')
 
-file_read = open('03_ids_towns', 'r')
+file_read = open('02_ips_most_popular', 'r')
 
 class Countries:
     countries = {}
@@ -18,12 +17,9 @@ class Countries:
     def __init__(self):
         file_read = open('01_thousand_most_popular', 'r')
         i = 0
-        for line in file_read:
-            temp = line.split()
-            self.ids_most_popular[temp[1]] = float(temp[2])
-            i = i + 1
-            if i > 1400:
-                break;
+        data = json.load(file_read)
+        for line in data:
+            self.ids_most_popular[line[1]] = line[2]
         self.getNames()
     def addItem( self, country, id ):
         if country in self.countries:
@@ -52,44 +48,36 @@ class Countries:
                     break
             mass = self.countries[country]
             for id in mass:
-                mass[id] = math.sqrt( float(mass[id]) ) * self.ids_most_popular[id]
+                mass[id] = mass[id] * self.ids_most_popular[id]
             mass = sorted(mass.iteritems(), key=operator.itemgetter(1),  reverse=True )
 
 
             basepath = os.path.dirname(__file__)
-            filepath = os.path.abspath(os.path.join(basepath, "../countries", country))
-            file_write = open(filepath, 'w')
-            i = 0
-            temp_list = []
-            print self.ids_names
-            for ( id1 , raiting )  in mass:
-                temp = str(id1) + " " + str(raiting) + " "
-                print temp
-                (name1, length1) =  self.ids_names[id1]
-                temp_list.append([id1, str(raiting), unicode(name1, errors='ignore'), length1])
-                i = i + 1
-                if i > 50:
-                    break
-            file_write.write(json.dumps(temp_list))
-            file_write.close()
-    def getNames(self):
-        i = 0
-        connection = Connection('144.76.168.108', 27017)
-        connection.metadata.authenticate('mipt', 'mipt')
-        db = connection.metadata
-        print self.ids_most_popular
-        for it in self.ids_most_popular :
-            item = db.bcoded_metadata.find_one({"_id":it})
-            item =  bcode.bdecode(item['bcoded_metadata'])
-            print i
-            #print self.ids_names
-            i = i + 1
-            #if i > 1500:
-            #    break;
             try:
-                self.ids_names[it] = (item['name'],str(item['piece length']))
+                filepath = os.path.abspath(os.path.join(basepath, "../countries", country))
+                file_write = open(filepath, 'w')
+                i = 0
+                temp_list = []
+                for ( id1 , raiting )  in mass:
+                    temp = str(id1) + " " + str(raiting) + " "
+                    (name1, length1) =  self.ids_names[id1]
+                    temp_list.append([id1, str(raiting), name1, length1])
+                    i = i + 1
+                    if i > 50:
+                        break
+                file_write.write(json.dumps(temp_list))
+                file_write.close()
+            except :
+                print "Exception in Countries -> backup -> saving"
+    def getNames(self):
+        json_data = open("01_thousand_most_popular", "r")
+        data = json.load(json_data)
+        for it in data :
+            print it[0]
+            try:
+                self.ids_names[it[1]] = (it[3],it[4])
             except:
-                self.ids_names[it] = ("name","10")
+                self.ids_names[it[1]] = ("name","10")
             
 countries = Countries()
 for line in file_read:
@@ -97,7 +85,13 @@ for line in file_read:
     if ( i < 0):
         continue
     id = line.split()[1]
-    country = line.split()[3]
+    ip = line.split()[2]
+    country = 0
+    try:
+        geo = gic.record_by_addr(ip)
+        country = geo['country_name']
+    except:
+        continue
     countries.addItem( country = country , id = id )
 file_read.close()
 countries.backup()
