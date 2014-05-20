@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get id to MAGNETS</title>
+	{% load staticfiles %}
+    <script src="http://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+	{% autoescape off %}
+		{{ text }}
+	{% endautoescape %}
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Top</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
+<div id="wrapper">
+    <aside id="left_side">
+<div class="block">
+{% if get_id %}
+<h1>Top torrents for region of {{ ip }}</h1>
+	{% if countries %}
+	<div class="block">
+	<form action="history/" method="post">
+		{% csrf_token %}
+		<select name="country">
+			{% for countr in countries %}
+				<option {% if countr == this %} selected {% endif %} value="{{ countr }}"> {{ countr }} </option>
+			{% endfor %}
+		</select>
+		<button type="submit">OK</button>
+	</form>
+	</div>
+	{% endif %}
+
+    <ul id="top">
+		<li>
+			<span>№</span>
+			<span>Title of torrent</span>
+		</li>
+        {% for id in get_id %}
+        <li>
+            <span>{{ id.3 }}</span>
+            <a href="magnet:?xt=urn:btih:{{ id.0 }}">{{ id.2 }}</a>
+        </li>    
+        {% endfor %}   
+    </ul>
+{% else %}
+    <h1>No top</h1>
+{% endif %}
+</div>
+</aside>
+<aside id="right_side">
+<form action="" method="post" id="ip_search">
+{% csrf_token %}
+<input type="text" name="ip" value="{{ ip }}" placeholder="Enter ip address">
+<button type="submit">Submit</button>
+</form>
+
+    <div id="map"></div>
+</aside>
+</div>
+</body>
+</html>

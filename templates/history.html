@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get id to MAGNETS</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Top</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="/analytics">Analytics</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
+<div id="wrapper">
+<aside id="left_side">
+	{% if countries %}
+	<form action="" method="post">
+		{% csrf_token %}
+		<select name="country">
+			{% for countr in countries %}
+				<option {% if countr == this %} selected {% endif %} value="{{ countr }}"> {{ countr }} </option>
+			{% endfor %}
+		</select>
+		<button type="submit">OK</button>
+	</form>
+	{% endif %}
+	{% if top %}
+	<h1>Top torrents for region of {{ this }}</h1>
+    <ul id="top">
+        {% for id in top %}
+        <li>
+            <a href="magnet:?xt=urn:btih:{{ id.0 }}">{{ id.2 }}</a>
+        </li>    
+        {% endfor %}   
+    </ul>
+	{% endif %}
+</aside>
+<aside id="right_side">
+	<form action="" method="post">
+		{% csrf_token %}
+		<input type="text" name="ip" value="{{ ip }}" >
+		<button type="submit">OK</button>
+	</form>
+{% if hist_data %}
+	<h1>Torrents for {{ ip }}</h1>
+	<ul id="top">
+	{% for item in hist_data %}
+	<li>
+	<a href="magnet:?xt=urn:btih:{{ item.0 }}">{{ item.1 }}</a>
+	</li>
+	{% endfor %}
+	</ul>
+{% else %}
+<h1>No data for this IP</h1>
+{% endif %}
+</aside>
+</div>
+</body>
+</html>

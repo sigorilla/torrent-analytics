@@ -113,8 +113,9 @@ def history(request):
 	return render(request, 'history.html', context)
 
 def analytics(request):
-	path = "image/web-analitika.gif"
-	context = {'path': path, }
+	path1 = "image/figure_1.png"
+	path2 = "image/figure_2.png"
+	context = {'path1': path1, 'path2': path2, }
 	return render(request, 'analytics.html', context)	
 
 def about(request):

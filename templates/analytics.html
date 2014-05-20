@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get id to MAGNETS</title>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Top</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="/about">About</a></li>
+        </ul>
+    </nav>
+<div id="wrapper">
+	<div class="block center">
+	<h1>File size statistics</h1>
+	<img src="{% static path1 %}">
+	<h1>Country activity</h1>
+	<img src="{% static path2 %}">
+	</div>
+</div>
+</body>
+</html>
